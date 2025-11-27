@@ -1,0 +1,15 @@
+###
+POST http://localhost:8080/api/homework
+Content-Type: multipart/form-data; boundary=b
+
+--b
+Content-Disposition: form-data; name="data"; filename="data.json"
+Content-Type: application/json
+
+{ "author": "1d4e0b66-d36f-4896-94f4-599fa77c267b", "task": "пом файл" }
+--b
+Content-Disposition: form-data; name="file"; filename="pom.xml"
+Content-Type: text/xml
+
+< ./pom.xml
+--b--
