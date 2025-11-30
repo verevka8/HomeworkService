@@ -10,6 +10,9 @@ import org.example.fileanalysis.infrastructure.persistence.mapper.Mapper;
 import org.hibernate.HibernateException;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Repository
 public class PlagiarismRepositoryImpl implements PlagiarismRepository {
 
@@ -30,5 +33,16 @@ public class PlagiarismRepositoryImpl implements PlagiarismRepository {
             em.getTransaction().rollback();
         }
         em.getTransaction().commit();
+    }
+
+    @Override
+    public List<Plagiarism> getPlagiarismByTask(String task) {
+        EntityManager em = emf.createEntityManager();
+        List<PlagiarismEntity> list = em.createQuery("select p from PlagiarismEntity p where p.task = :task", PlagiarismEntity.class).setParameter("task", task).getResultList();
+        List<Plagiarism> result = new ArrayList<>();
+        for (PlagiarismEntity plagiarismEntity : list) {
+            result.add(mapper.toDomain(plagiarismEntity));
+        }
+        return result;
     }
 }

@@ -17,11 +17,13 @@ public class HomeworkImpl implements HomeworkService {
     private final YandexS3Service s3Service;
     private final UserService userService;
     private final HomeworkRepository homeworkRepository;
+    private final HomeworkAnalisysClient homeworkAnalisys;
 
-    public HomeworkImpl(YandexS3Service s3Service, UserService userService, HomeworkRepository homeworkRepository){
+    public HomeworkImpl(YandexS3Service s3Service, UserService userService, HomeworkRepository homeworkRepository, HomeworkAnalisysClient homeworkAnalisys){
         this.s3Service = s3Service;
         this.userService = userService;
         this.homeworkRepository = homeworkRepository;
+        this.homeworkAnalisys = homeworkAnalisys;
     }
 
     @Override
@@ -31,6 +33,7 @@ public class HomeworkImpl implements HomeworkService {
         homeworkRepository.saveHomeWork(homework);
         System.out.println(file.getOriginalFilename());
         s3Service.upload(homework, file);
+        homeworkAnalisys.analyzeHomework(homework.getUuid());
         return homework;
     }
 

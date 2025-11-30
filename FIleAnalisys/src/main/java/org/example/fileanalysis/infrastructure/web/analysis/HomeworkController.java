@@ -1,6 +1,7 @@
 package org.example.fileanalysis.infrastructure.web.analysis;
 
 import org.example.fileanalysis.application.analysis.HomeworkAnalysisService;
+import org.example.fileanalysis.application.dto.ReportResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -16,5 +17,10 @@ public class HomeworkController {
     @GetMapping(value = "/analysis_homework")
     public void analysisHomework(@RequestParam UUID homeworkId)  {
         service.analysis(homeworkId);
+    }
+
+    @GetMapping(value = "/homeworks/{task}/report")
+    public ReportResponse getReportOfTask(@PathVariable String task)  {
+        return service.getTaskReport(task);
     }
 }
