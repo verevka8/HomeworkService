@@ -1,4 +1,4 @@
-package org.example.fileanalysis.infrastructure.persistence.s3;
+package org.example.fileanalysis.infrastructure.persistence.s3.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

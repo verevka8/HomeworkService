@@ -9,8 +9,11 @@ import org.example.fileanalysis.domain.repository.HomeworkRepository;
 import org.example.fileanalysis.domain.repository.PlagiarismRepository;
 import org.example.fileanalysis.domain.service.PlagiarismChecker;
 import org.example.fileanalysis.infrastructure.persistence.s3.YandexS3Service;
+import org.example.fileanalysis.infrastructure.web.analysis.WordCloudClientImpl;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,26 +21,32 @@ import java.util.stream.Collectors;
 public class HomeworkAnalysisServiceImpl implements HomeworkAnalysisService {
 
     private final HomeworkRepository homeworkRepository;
-    private final YandexS3Service s3Service;
+    private final HomeworkStorage homeworkStorage;
     private final PlagiarismChecker checker;
     private final PlagiarismRepository plagiarismRepository;
+    private final WordCloudClient wordCloudClient;
 
-    public HomeworkAnalysisServiceImpl(HomeworkRepository homeworkRepository, YandexS3Service s3Service, PlagiarismRepository plagiarismRepository, PlagiarismChecker checker) {
+    public HomeworkAnalysisServiceImpl(HomeworkRepository homeworkRepository, HomeworkStorage homeworkStorage, PlagiarismRepository plagiarismRepository, PlagiarismChecker checker, WordCloudClient wordCloudClient) {
         this.homeworkRepository = homeworkRepository;
-        this.s3Service = s3Service;
+        this.homeworkStorage = homeworkStorage;
         this.plagiarismRepository = plagiarismRepository;
         this.checker = checker;
+        this.wordCloudClient = wordCloudClient;
     }
 
     @Override
-    public void analysis(UUID homeworkId) {
+    public void analysis(UUID homeworkId) throws IOException {
         Homework homework = homeworkRepository.getHomeWorkById(homeworkId);
         List<Homework> others = homeworkRepository.getHomeworksByTask(homework.getTask());
-        String homeworkAsText = s3Service.getObjectAsText(homework.getTask() + "/" + homework.getAuthor().getUuid() + "/" + homework.getFilename()); //TODO: убрать хардкор
+        String homeworkAsText = homeworkStorage.getHomeworkAsText(homework);
+
+        Resource image = wordCloudClient.getWorkCLoud(homeworkAsText);
+        homeworkStorage.storeWordCloudOfHomework(homework, image);
+        System.out.println("Изображение получено: " + image.getFilename() + " ");
 
         for (Homework other : others) {
             if (other.getAuthor().equals(homework.getAuthor())) continue;
-            String text = s3Service.getObjectAsText(other.getTask() + "/" + other.getAuthor().getUuid() + "/" + other.getFilename()); //TODO: убрать хардкор
+            String text = homeworkStorage.getHomeworkAsText(homework);
             if (checker.isPlagiarized(homeworkAsText, text)) {
                 plagiarismRepository.savePlagiarism(new Plagiarism(homework.getAuthor(), other.getAuthor(), other.getTask()));
             }

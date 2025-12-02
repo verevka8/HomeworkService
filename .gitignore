@@ -1,4 +1,5 @@
 .idea
-*/target
-application.properties
-persistence.xml
+**/target
+*.iml
+.env
+.gitignore

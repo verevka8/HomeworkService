@@ -2,6 +2,7 @@ package org.example.fileanalysis.infrastructure.persistence.s3;
 
 import org.example.fileanalysis.domain.model.Homework;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -24,28 +25,20 @@ public class YandexS3Service {
         this.s3Client = s3Client;
     }
 
-    public String upload(Homework homework, MultipartFile file) throws IOException {
-        String key = homework.getTask() + "/" + homework.getAuthor().getUuid() + "/" + homework.getFilename();
+    public void upload(String key, Resource file) throws IOException {
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
-                .contentType(file.getContentType())
-                .contentLength(file.getSize())
+                .contentLength(file.contentLength())
                 .build();
 
         s3Client.putObject(
                 request,
-                RequestBody.fromInputStream(file.getInputStream(), file.getSize())
+                RequestBody.fromInputStream(file.getInputStream(), file.contentLength())
         );
-
-        return key;
-    }
-
-    public List<S3Object> getAllHomeworksOnTask(String task) {
-        return s3Client.listObjectsV2(builder -> builder.bucket(bucket).prefix(task + "/")).contents();
     }
 
     public String getObjectAsText(String key) {
-        return s3Client.getObjectAsBytes(r -> r.bucket(bucket).key(key)).asUtf8String();
+        return s3Client.getObjectAsBytes(r -> r.bucket(bucket).key(key)).   asUtf8String();
     }
 }

@@ -14,11 +14,12 @@ import java.util.UUID;
 
 @Repository
 public class HomeworkRepositoryImpl implements HomeworkRepository {
-    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("Hibernate");
+    private final EntityManagerFactory emf;
     private final HomeworkMapper mapper;
 
-    public HomeworkRepositoryImpl(HomeworkMapper mapper) {
+    public HomeworkRepositoryImpl(HomeworkMapper mapper, EntityManagerFactory emf) {
         this.mapper = mapper;
+        this.emf = emf;
     }
 
     @Override

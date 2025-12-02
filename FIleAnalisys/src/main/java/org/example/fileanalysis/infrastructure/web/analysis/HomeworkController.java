@@ -4,6 +4,7 @@ import org.example.fileanalysis.application.analysis.HomeworkAnalysisService;
 import org.example.fileanalysis.application.dto.ReportResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @RestController
@@ -15,7 +16,7 @@ public class HomeworkController {
         this.service = service;
     }
     @GetMapping(value = "/analysis_homework")
-    public void analysisHomework(@RequestParam UUID homeworkId)  {
+    public void analysisHomework(@RequestParam UUID homeworkId) throws IOException {
         service.analysis(homeworkId);
     }
 

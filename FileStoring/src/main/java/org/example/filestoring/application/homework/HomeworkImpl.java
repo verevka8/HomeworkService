@@ -4,7 +4,6 @@ import org.example.filestoring.application.user.UserService;
 import org.example.filestoring.domain.model.Homework;
 import org.example.filestoring.domain.model.User;
 import org.example.filestoring.domain.repository.HomeworkRepository;
-import org.example.filestoring.infrastructure.persistence.s3.YandexS3Service;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,13 +13,13 @@ import java.util.UUID;
 
 @Service
 public class HomeworkImpl implements HomeworkService {
-    private final YandexS3Service s3Service;
+    private final HomeworkStorage homeworkStorage;
     private final UserService userService;
     private final HomeworkRepository homeworkRepository;
     private final HomeworkAnalisysClient homeworkAnalisys;
 
-    public HomeworkImpl(YandexS3Service s3Service, UserService userService, HomeworkRepository homeworkRepository, HomeworkAnalisysClient homeworkAnalisys){
-        this.s3Service = s3Service;
+    public HomeworkImpl(HomeworkStorage homeworkStorage, UserService userService, HomeworkRepository homeworkRepository, HomeworkAnalisysClient homeworkAnalisys){
+        this.homeworkStorage = homeworkStorage;
         this.userService = userService;
         this.homeworkRepository = homeworkRepository;
         this.homeworkAnalisys = homeworkAnalisys;
@@ -32,13 +31,13 @@ public class HomeworkImpl implements HomeworkService {
         Homework homework = Homework.createNew(user, new Date(), task, file.getOriginalFilename());
         homeworkRepository.saveHomeWork(homework);
         System.out.println(file.getOriginalFilename());
-        s3Service.upload(homework, file);
+        homeworkStorage.store(homework, file);
         homeworkAnalisys.analyzeHomework(homework.getUuid());
         return homework;
     }
 
     @Override
     public Homework getHomeworkById(UUID homeworkId) {
-        return null;
+        return homeworkRepository.getHomeWorkById(homeworkId);
     }
 }

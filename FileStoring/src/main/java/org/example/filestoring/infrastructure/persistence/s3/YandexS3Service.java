@@ -1,6 +1,5 @@
 package org.example.filestoring.infrastructure.persistence.s3;
 
-import org.example.filestoring.domain.model.Homework;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,8 +21,7 @@ public class YandexS3Service {
     @Value("${yandex.cloud.s3.bucket}")
     private String bucket;
 
-    public String upload(Homework homeWork, MultipartFile file) throws IOException {
-        String key = homeWork.getTask() + "/" + homeWork.getAuthor().getUuid() + "/" + homeWork.getFilename();
+    public void uploadFile(String key, MultipartFile file) throws IOException {
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
@@ -35,7 +33,5 @@ public class YandexS3Service {
                 request,
                 RequestBody.fromInputStream(file.getInputStream(), file.getSize())
         );
-
-        return key;
     }
 }

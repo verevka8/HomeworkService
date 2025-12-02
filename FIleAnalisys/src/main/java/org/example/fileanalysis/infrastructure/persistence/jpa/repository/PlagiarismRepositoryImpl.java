@@ -16,11 +16,12 @@ import java.util.List;
 @Repository
 public class PlagiarismRepositoryImpl implements PlagiarismRepository {
 
-    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("Hibernate");
+    private final EntityManagerFactory emf;
     private final Mapper<Plagiarism, PlagiarismEntity> mapper;
 
-    public PlagiarismRepositoryImpl(Mapper<Plagiarism, PlagiarismEntity> mapper) {
+    public PlagiarismRepositoryImpl(Mapper<Plagiarism, PlagiarismEntity> mapper, EntityManagerFactory emf) {
         this.mapper = mapper;
+        this.emf = emf;
     }
 
     @Override

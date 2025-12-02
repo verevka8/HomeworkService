@@ -16,11 +16,12 @@ import java.util.UUID;
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
-    private final EntityManagerFactory emf = Persistence.createEntityManagerFactory("Hibernate");
+    private final EntityManagerFactory emf;
     private final UserMapper mapper;
 
-    public UserRepositoryImpl(UserMapper mapper) {
+    public UserRepositoryImpl(UserMapper mapper, EntityManagerFactory emf) {
         this.mapper = mapper;
+        this.emf = emf;
     }
 
     @Override
