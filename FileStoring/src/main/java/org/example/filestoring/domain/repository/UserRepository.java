@@ -2,12 +2,13 @@ package org.example.filestoring.domain.repository;
 
 import org.example.filestoring.domain.model.User;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository {
     void saveUser(User user);
 
-    User getUserById(UUID uuid);
+    Optional<User> getUserById(UUID uuid);
 
-    User getUserByName(String firstname, String lastname);
+    Optional<User> getUserByName(String firstname, String lastname);
 }

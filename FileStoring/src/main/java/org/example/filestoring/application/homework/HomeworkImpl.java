@@ -1,5 +1,6 @@
 package org.example.filestoring.application.homework;
 
+import org.example.filestoring.application.exception.HomeworkNotFoundException;
 import org.example.filestoring.application.user.UserService;
 import org.example.filestoring.domain.model.Homework;
 import org.example.filestoring.domain.model.User;
@@ -38,6 +39,6 @@ public class HomeworkImpl implements HomeworkService {
 
     @Override
     public Homework getHomeworkById(UUID homeworkId) {
-        return homeworkRepository.getHomeWorkById(homeworkId);
+        return homeworkRepository.getHomeWorkById(homeworkId).orElseThrow(HomeworkNotFoundException::new);
     }
 }

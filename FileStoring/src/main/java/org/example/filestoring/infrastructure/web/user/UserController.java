@@ -1,5 +1,9 @@
 package org.example.filestoring.infrastructure.web.user;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.filestoring.application.user.UserService;
 import org.example.filestoring.domain.model.User;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
+@Tag(name = "Пользователи", description = "CRUD-операции с пользователями")
 public class UserController {
 
     private final UserService service;
@@ -17,17 +22,37 @@ public class UserController {
     }
 
     @GetMapping("/users/{uuid}")
-    public User getUserById(@PathVariable("uuid") UUID uuid) {
+    @Operation(
+            summary = "Получить пользователя по UUID",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Пользователь найден"),
+                    @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+            }
+    )
+    public User getUserById(@Parameter(description = "Идентификатор пользователя", required = true)
+                            @PathVariable("uuid") UUID uuid) {
         return service.getUserById(uuid);
     }
 
     @GetMapping("/users")
-    public User getUserByName(@RequestParam String firstname, @RequestParam String lastname) {
+    @Operation(
+            summary = "Получить пользователя по имени и фамилии",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Пользователь найден"),
+                    @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+            }
+    )
+    public User getUserByName(@Parameter(description = "Имя пользователя", required = true) @RequestParam String firstname,
+                              @Parameter(description = "Фамилия пользователя", required = true) @RequestParam String lastname) {
         return service.getUserByName(firstname, lastname);
     }
 
     @PostMapping("/users")
-    public UUID createUser(@RequestBody CreateUserRequest request){
+    @Operation(
+            summary = "Создать пользователя",
+            responses = @ApiResponse(responseCode = "200", description = "Пользователь создан")
+    )
+    public UUID createUser(@RequestBody CreateUserRequest request) {
         return service.createUser(request.firstname(), request.lastname());
     }
 }

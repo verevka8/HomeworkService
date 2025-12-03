@@ -10,6 +10,8 @@ import org.example.filestoring.infrastructure.persistence.mapper.HomeworkMapper;
 import org.hibernate.HibernateException;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -35,12 +37,11 @@ public class HomeworkRepositoryImpl implements HomeworkRepository {
     }
 
     @Override
-    public Homework getHomeWorkById(UUID uuid) {
-        return mapper.toDomain(getHomeworkEntity(uuid));
-    }
-
-    public HomeworkEntity getHomeworkEntity(UUID uuid) {
-        EntityManager em = emf.createEntityManager();
-        return em.find(HomeworkEntity.class, uuid);
+    public Optional<Homework> getHomeWorkById(UUID uuid) {
+        try (EntityManager em = emf.createEntityManager()) {
+            HomeworkEntity entity = em.find(HomeworkEntity.class, uuid);
+            return Optional.ofNullable(entity).map(mapper::toDomain);
+        }
     }
 }
+
