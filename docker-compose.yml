@@ -30,7 +30,7 @@ services:
         condition: service_healthy
 
   file-analysis:
-    build: ./FIleAnalisys
+    build: ./FIleAnalysis
     container_name: file-analysis
     env_file:
       - .env

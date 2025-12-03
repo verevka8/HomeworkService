@@ -1,7 +1,10 @@
 package org.example.filestoring.application.homework;
 
 import org.example.filestoring.application.exception.HomeworkNotFoundException;
-import org.example.filestoring.application.user.UserService;
+import org.example.filestoring.application.homework.in.HomeworkService;
+import org.example.filestoring.application.homework.out.HomeworkAnalisysClient;
+import org.example.filestoring.application.homework.out.HomeworkStorage;
+import org.example.filestoring.application.user.in.UserService;
 import org.example.filestoring.domain.model.Homework;
 import org.example.filestoring.domain.model.User;
 import org.example.filestoring.domain.repository.HomeworkRepository;

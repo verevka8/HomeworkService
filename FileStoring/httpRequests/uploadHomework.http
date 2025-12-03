@@ -1,14 +1,14 @@
 ###
-POST http://localhost:8081/api/homework
+POST http://localhost:8079/file-storing/api/homework
 Content-Type: multipart/form-data; boundary=b
 
 --b
 Content-Disposition: form-data; name="data"; filename="data.json"
 Content-Type: application/json
 
-{ "author": "600c2577-e386-436e-b6c8-a516ba2887fd", "task": "task1" }
+{ "author": "4761b24a-6b04-4d5d-bf81-82df4264037d", "task": "task2" }
 --b
-Content-Disposition: form-data; name="file"; filename="bad_hw.txt"
+Content-Disposition: form-data; name="file"; filename="bad_hw2.txt"
 Content-Type: text/plain
 
 < bad_hw.txt

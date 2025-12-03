@@ -1,6 +1,7 @@
 package org.example.filestoring.application.user;
 
 import org.example.filestoring.application.exception.UserNotFoundException;
+import org.example.filestoring.application.user.in.UserService;
 import org.example.filestoring.domain.model.User;
 import org.example.filestoring.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     public UserServiceImpl(UserRepository repository){
